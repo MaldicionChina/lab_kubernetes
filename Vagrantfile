@@ -44,7 +44,7 @@ Vagrant.configure("2") do |config|
       node.vm.network :private_network, ip: "192.168.205.1#{n}"
 
       node.vm.provider :virtualbox do |v|
-        v.customize ["modifyvm", :id, "--memory", 1500]
+        v.customize ["modifyvm", :id, "--memory", 500]
       end
       node.vm.provision :shell, path: "./bootstrap.sh"
     end
