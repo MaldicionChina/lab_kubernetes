@@ -19,34 +19,31 @@ Vagrant.configure("2") do |config|
 
 
   config.vm.define "master", primary: true do |master|
+
     master.vm.box = "ubuntu/xenial64"
     master.vm.hostname = 'master'
-    #web01.vm.box_url = "ubuntu/trusty64"
-
     master.vm.network :private_network, ip: "192.168.205.10"
-    #web01.vm.network :forwarded_port, guest: 22, host: 22, id: "ssh"
 
     master.vm.provider :virtualbox do |v|
-      #v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
       v.customize ["modifyvm", :id, "--memory", 1500]
-      #v.customize ["modifyvm", :id, "--name", "web01"]
+      v.cpus = 2
     end
 
-    master.vm.provision :shell, path: "./bootstrap.sh"
+    #master.vm.provision :shell, path: "./bootstrap.sh"
   end
 
 
   (1..NUM_WORKERS).each do |n|
     config.vm.define "node#{n}", primary: true do |node|
+
       node.vm.box = "ubuntu/xenial64"
       node.vm.hostname = "node#{n}"
-
       node.vm.network :private_network, ip: "192.168.205.1#{n}"
 
       node.vm.provider :virtualbox do |v|
         v.customize ["modifyvm", :id, "--memory", 500]
       end
-      node.vm.provision :shell, path: "./bootstrap.sh"
+      #node.vm.provision :shell, path: "./bootstrap.sh"
     end
   end
 

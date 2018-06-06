@@ -3,6 +3,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 apt-get update && apt-get upgrade -y
 # Install Docker
+echo "Installing docker"
 apt-get install -y \
   apt-transport-https \
   docker.io
@@ -17,7 +18,7 @@ echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.l
 # Install Kubernetes
 apt-get update
 apt-get install -y \
-  kubelet
-  kubeadm
-  kubectl
-  kubernetes-cni
+  kubelet \
+  kubeadm \
+  kubectl \
+  kubernetes-cni \
