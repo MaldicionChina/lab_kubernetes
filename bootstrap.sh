@@ -1,24 +1,28 @@
 #!/bin/bash
+# From Udemy Course
+# https://github.com/wardviaene/on-prem-or-cloud-agnostic-kubernetes/blob/master/scripts/install-kubernetes.sh
+
 export DEBIAN_FRONTEND=noninteractive
 
-apt-get update && apt-get upgrade -y
-# Install Docker
-echo "Installing docker"
-apt-get install -y \
-  apt-transport-https \
-  docker.io
-
-systemctl start docker
-systemctl enable docker
-
-# Set kubernetes repository
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list
-
-# Install Kubernetes
+echo "installing docker"
 apt-get update
 apt-get install -y \
-  kubelet \
-  kubeadm \
-  kubectl \
-  kubernetes-cni \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+add-apt-repository \
+   "deb https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
+   $(lsb_release -cs) \
+   stable"
+apt-get update && apt-get install -y docker-ce=$(apt-cache madison docker-ce | grep 17.03 | head -1 | awk '{print $3}')
+
+echo "installing kubernetes [kubelet, kudeadm, kubectl]"
+apt-get update && apt-get install -y apt-transport-https
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
+deb http://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+apt-get update
+apt-get install -y kubelet kubeadm kubectl
